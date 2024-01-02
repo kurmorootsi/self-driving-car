@@ -1,5 +1,5 @@
 class Car {
-    constructor(x, y, width, height, controlType, maxSpeed = 3) {
+    constructor(x, y, width, height, controlType, maxSpeed = 3, test = true) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -12,6 +12,8 @@ class Car {
         this.angle = 0;
         this.damaged = false;
 
+        this.test = test;
+
         this.useBrain = controlType === "AI";
 
         if (controlType !== "DUMMY") {
@@ -22,6 +24,9 @@ class Car {
         }
 
         this.controls = new Controls(controlType);
+
+        this.img = new Image();
+        this.img.src = (controlType === "AI" ? "car2.png" : "car.png")
     }
 
     update(roadBorders, traffic) {
@@ -37,7 +42,6 @@ class Car {
                 s => s === null ? 0 : 1 - s.offset
             )
             const outputs = NeuralNetwork.feedForward(offsets, this.brain);
-            console.log(outputs);
 
             if (this.useBrain) {
                 this.controls.forward = outputs[0];
@@ -132,21 +136,33 @@ class Car {
         return points;
     }
 
-    draw(ctx, color) {
-        if (this.damaged) {
-            ctx.fillStyle = "red";
+    draw(ctx, color, drawSensor) {
+        if (!this.test) {
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(-this.angle);
+            ctx.drawImage(this.img,
+                -this.width / 2,
+                -this.height / 2,
+                this.width,
+                this.height);
+            ctx.restore();
         } else {
-            ctx.fillStyle = color;
+            if (this.damaged) {
+                ctx.fillStyle = "red";
+            } else {
+                ctx.fillStyle = color;
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
+            for (let i = 1; i < this.polygon.length; i++) {
+                ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
+            }
+            ctx.fill();
         }
 
-        ctx.beginPath();
-        ctx.moveTo(this.polygon[0].x, this.polygon[0].y);
-        for (let i = 1; i < this.polygon.length; i++) {
-            ctx.lineTo(this.polygon[i].x, this.polygon[i].y);
-        }
-        ctx.fill();
-
-        if (this.sensor) {
+        if (this.sensor && drawSensor) {
             this.sensor.draw(ctx);
         }
     }
