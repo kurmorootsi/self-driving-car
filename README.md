@@ -1,6 +1,6 @@
-Self-driving car using simple neural network
+## Self-driving car using simple neural network
 
-Starts with randomly generated brain, save the best brain
+Starts with randomly generated brain (weight & bias), save the best brain, refresh, train the brain until you dodge all the obstacles
 
 ## Getting Started
 
