@@ -4,6 +4,7 @@ class Car {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.score = 1
 
         this.speed = 0;
         this.acceleration = 0.2;
@@ -37,6 +38,7 @@ class Car {
         }
 
         if (this.sensor) {
+            this.score = Math.abs(Math.round(this.y / 100));
             this.sensor.update(roadBorders, traffic);
             const offsets = this.sensor.readings.map(
                 s => s === null ? 0 : 1 - s.offset
