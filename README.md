@@ -11,4 +11,4 @@ Starts with randomly generated brain (weight & bias), save the best brain, refre
         - New weight is randomised with 10% difference to the saved brain
     - Use "Reset Brain" to reset the best cars weight & bias
 
-![screenshot](images/screenshot.png)
+![screenshot](assets/images/screenshot.png)
